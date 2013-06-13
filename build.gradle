@@ -1,0 +1,53 @@
+apply plugin:'java'
+apply plugin: 'idea'
+apply plugin:'application'
+
+version = '1.0.2'
+
+mainClassName = "org.info.sample.Main"
+
+task createDocs {
+    def docs = file("$buildDir/docs")
+    outputs.dir docs
+    doLast {
+        docs.mkdirs()
+        new File(docs, "readme.txt").write("Read me!")
+    }
+}
+
+applicationDistribution.from(createDocs) {
+    into "docs"
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'commons-collections:commons-collections:3.2.1'
+	compile 'org.lwjgl.lwjgl:lwjgl:2.8.2'
+    compile 'org.lwjgl.lwjgl:lwjgl_util:2.8.2'
+}
+
+platforms = ['windows', 'linux', 'osx']
+platforms.each { platform ->
+    task "${platform}Natives" {
+        outputDir = "$buildDir/natives/$platform"
+        inputs.files(configurations.compile)
+        outputs.dir(outputDir)
+        doLast {
+            copy {
+                def artifacts = configurations.compile.resolvedConfiguration.resolvedArtifacts
+                    .findAll { it.classifier == "natives-$platform" }
+                artifacts.each { 
+                    from zipTree(it.file)
+                }            
+                into outputDir
+            }
+        }
+    }
+}
+task natives {
+    description "Copies native libraries to an appropriate directory."
+    dependsOn platforms.collect { "${it}Natives" }.findAll { tasks[it] }
+}
