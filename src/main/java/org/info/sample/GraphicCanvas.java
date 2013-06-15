@@ -12,7 +12,6 @@ public class GraphicCanvas implements Canvas {
             glVertex2d((int) x1, (int) y1);
             glVertex2d((int) x2, (int) y2);
         glEnd();
-
     }
 
 }

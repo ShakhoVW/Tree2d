@@ -25,7 +25,7 @@ public class Painter {
     public static Image draw(int width, int height, int border, LSystem lSystem, double deltaAngle, int depth, double alpha) {
         BoundCanvas boundCanvas = new BoundCanvas();
         Turtle boundTurtle = new Turtle(boundCanvas, 1, deltaAngle);
-        boundTurtle.draw(lSystem.getResult(depth), new State(0, 0, alpha));
+//        boundTurtle.draw(lSystem.getResult(depth), new State(0, 0, alpha));
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         double scale = Math.min(
                 (width - 2 * border) / (boundCanvas.getMaxX() - boundCanvas.getMinX()),
@@ -38,7 +38,7 @@ public class Painter {
         imageGraphics.setColor(Color.BLACK);
         GraphicCanvas graphicCanvas = new GraphicCanvas();
         Turtle graphicTurtle = new Turtle(graphicCanvas, scale, deltaAngle);
-        graphicTurtle.draw(lSystem.getResult(depth), new State(x, y, alpha));
+//        graphicTurtle.draw(lSystem.getResult(depth), new State(x, y, alpha));
         return image;
     }
 }
